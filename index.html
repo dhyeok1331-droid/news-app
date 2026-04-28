@@ -42,14 +42,25 @@
       <div class="skeleton-card"><div class="sk sk-badge"></div><div class="sk sk-title"></div><div class="sk sk-title short"></div></div>
       <div class="skeleton-card"><div class="sk sk-badge"></div><div class="sk sk-title"></div><div class="sk sk-title short"></div></div>
     </div>
-
     <div class="error-box" id="errorBox" style="display:none">
       <p>⚠️ 뉴스를 불러오지 못했어요</p>
       <button id="retryBtn">다시 시도</button>
     </div>
-
     <ul class="news-list" id="newsList"></ul>
   </main>
+
+  <!-- 기사 본문 뷰어 -->
+  <div class="modal-overlay" id="articleOverlay">
+    <div class="modal" id="articleModal">
+      <div class="modal-header">
+        <span class="modal-badge" id="articleBadge"></span>
+        <button class="modal-close" id="articleClose">✕</button>
+      </div>
+      <h2 class="modal-title" id="articleTitle"></h2>
+      <div class="modal-body" id="articleBody"></div>
+      <a class="modal-link" id="articleLink" target="_blank" rel="noopener">원문 보기 →</a>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

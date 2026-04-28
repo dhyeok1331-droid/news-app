@@ -1,8 +1,4 @@
-// ============================================================
-//  설정
-// ============================================================
-
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwbnEV4c3fgXT91OCbQM8TlL-007go8D-YFy9EETj2DEnLs_4Qr68mPu3SmHKk59_FFag/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzdn1VTzmOA7A6oqx__PS8U0kbATE7OUg-NCdna6MDLy8uAHTrRLg9-8wFTm6FRedk_nw/exec';
 
 const FEEDS = [
   { cat: 'kr',    label: '국내',    url: 'https://www.yonhapnewstv.co.kr/browse/feed/' },
@@ -12,15 +8,9 @@ const FEEDS = [
   { cat: 'eco',   label: '경제',    url: 'https://rss.donga.com/economy.xml' },
 ];
 
-// ============================================================
-//  상태
-// ============================================================
 let allNews = [];
 let currentCat = 'all';
 
-// ============================================================
-//  날짜 표시
-// ============================================================
 function setDate() {
   const d = new Date();
   const days = ['일','월','화','수','목','금','토'];
@@ -28,9 +18,6 @@ function setDate() {
     `${d.getMonth()+1}월 ${d.getDate()}일 ${days[d.getDay()]}요일`;
 }
 
-// ============================================================
-//  RSS fetch
-// ============================================================
 async function fetchFeed(feed) {
   try {
     const url = GAS_URL + '?url=' + encodeURIComponent(feed.url);
@@ -63,9 +50,6 @@ function formatTime(pubStr) {
   return `${d.getMonth()+1}/${d.getDate()}`;
 }
 
-// ============================================================
-//  뉴스 불러오기
-// ============================================================
 async function loadNews() {
   document.getElementById('skeletonList').style.display = 'flex';
   document.getElementById('newsList').innerHTML = '';
@@ -85,9 +69,6 @@ async function loadNews() {
   }
 }
 
-// ============================================================
-//  목록 렌더링
-// ============================================================
 function renderList() {
   document.getElementById('skeletonList').style.display = 'none';
   const list = document.getElementById('newsList');
@@ -114,16 +95,43 @@ function renderList() {
       <p class="card-title">${news.title}</p>
       ${news.desc ? `<p class="card-desc">${news.desc.slice(0, 80)}...</p>` : ''}
     `;
-    li.addEventListener('click', () => {
-      window.open(news.link, '_blank');
-    });
+    li.addEventListener('click', () => openArticle(news));
     list.appendChild(li);
   });
 }
 
-// ============================================================
-//  이벤트
-// ============================================================
+async function openArticle(news) {
+  const overlay = document.getElementById('articleOverlay');
+  document.getElementById('articleBadge').className = `badge badge-${news.cat}`;
+  document.getElementById('articleBadge').textContent = news.label;
+  document.getElementById('articleTitle').textContent = news.title;
+  document.getElementById('articleLink').href = news.link;
+  document.getElementById('articleBody').innerHTML = `
+    <div class="ai-loading">
+      <span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span>
+      <span class="ai-loading-text">기사 불러오는 중...</span>
+    </div>`;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  try {
+    const url = GAS_URL + '?mode=article&url=' + encodeURIComponent(news.link);
+    const res = await fetch(url);
+    const text = await res.text();
+    const clean = text.replace(/\s+/g, ' ').trim();
+    document.getElementById('articleBody').innerHTML =
+      `<p class="article-text">${clean}</p>`;
+  } catch {
+    document.getElementById('articleBody').innerHTML =
+      `<p class="article-text">본문을 불러오지 못했어요.<br>원문 링크를 확인해보세요.</p>`;
+  }
+}
+
+function closeArticle() {
+  document.getElementById('articleOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -135,9 +143,10 @@ document.querySelectorAll('.tab').forEach(btn => {
 
 document.getElementById('refreshBtn').addEventListener('click', loadNews);
 document.getElementById('retryBtn').addEventListener('click', loadNews);
+document.getElementById('articleClose').addEventListener('click', closeArticle);
+document.getElementById('articleOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('articleOverlay')) closeArticle();
+});
 
-// ============================================================
-//  시작
-// ============================================================
 setDate();
 loadNews();
