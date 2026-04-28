@@ -1,0 +1,13 @@
+{
+  "name": "데일리 브리프",
+  "short_name": "데일리브리프",
+  "description": "AI 요약 뉴스 앱",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f4f0",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
