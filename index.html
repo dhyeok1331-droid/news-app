@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>데일리 브리프</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <span class="logo">데일리 브리프</span>
+        <span class="date-badge" id="dateBadge"></span>
+      </div>
+      <button class="refresh-btn" id="refreshBtn" title="새로고침">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <nav class="tab-bar">
+    <button class="tab active" data-cat="all">전체</button>
+    <button class="tab" data-cat="kr">국내</button>
+    <button class="tab" data-cat="world">해외</button>
+    <button class="tab" data-cat="it">IT·테크</button>
+    <button class="tab" data-cat="eco">경제</button>
+  </nav>
+
+  <main class="main">
+    <div class="skeleton-list" id="skeletonList">
+      <div class="skeleton-card"><div class="sk sk-badge"></div><div class="sk sk-title"></div><div class="sk sk-title short"></div></div>
+      <div class="skeleton-card"><div class="sk sk-badge"></div><div class="sk sk-title"></div><div class="sk sk-title short"></div></div>
+      <div class="skeleton-card"><div class="sk sk-badge"></div><div class="sk sk-title"></div><div class="sk sk-title short"></div></div>
+      <div class="skeleton-card"><div class="sk sk-badge"></div><div class="sk sk-title"></div><div class="sk sk-title short"></div></div>
+    </div>
+    <div class="error-box" id="errorBox" style="display:none">
+      <p>⚠️ 뉴스를 불러오지 못했어요</p>
+      <button id="retryBtn">다시 시도</button>
+    </div>
+    <ul class="news-list" id="newsList"></ul>
+  </main>
+
+  <!-- 기사 본문 뷰어 -->
+  <div class="modal-overlay" id="articleOverlay">
+    <div class="modal" id="articleModal">
+      <div class="modal-header">
+        <span class="modal-badge" id="articleBadge"></span>
+        <button class="modal-close" id="articleClose">✕</button>
+      </div>
+      <h2 class="modal-title" id="articleTitle"></h2>
+      <div class="modal-body" id="articleBody"></div>
+      <a class="modal-link" id="articleLink" target="_blank" rel="noopener">원문 보기 →</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
